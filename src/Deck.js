@@ -2,9 +2,26 @@
  * Created by Luteh on 20/06/2017.
  */
 import React, {Component} from 'react'
-import {View, Animated} from 'react-native'
+import {
+    View,
+    Animated,
+    PanResponder
+} from 'react-native'
 
 class Deck extends Component {
+    constructor(props) {
+        super(props);
+        const panResponder = PanResponder.create({
+            onStartShouldSetPanResponder: () => true,
+            onPanResponderMove: (event, gesture) => {
+                console.log(gesture);
+            },
+            onPanResponderRelease: () => {
+            }
+
+        });
+        this.state = {panResponder};
+    }
 
     renderCards() {
         return this.props.data.map(item => {
