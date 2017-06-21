@@ -46,11 +46,15 @@ class Deck extends Component {
         this.state = {panResponder, position, index: 0};
     }
 
+    //handle if card has gone
     onSwipeComplete(direction) {
         const {onSwipeLeft, onSwipeRight, data} = this.props;
         const item = data[this.state.index];
 
         direction === 'right' ? onSwipeRight(item) : onSwipeLeft(item);
+
+        this.state.position.setValue({x: 0, y: 0});
+        this.setState({index: this.state.index + 1});
     }
 
     //make card gone to the right or left
@@ -59,16 +63,17 @@ class Deck extends Component {
         Animated.timing(this.state.position, {
             toValue: {x, y: 0},
             duration: SWIPE_OUT_DURATION
-        }).start();
+        }).start(() => this.onSwipeComplete(direction));
     }
 
-    //Springing the card back to default
+    //Springing the card back to default position
     resetPosition() {
         Animated.spring(this.state.position, {
             toValue: {x: 0, y: 0}
         }).start();
     }
 
+    //make card be able to rotate
     getCardStyle() {
         const {position} = this.state;
         const rotate = position.x.interpolate({
@@ -82,9 +87,16 @@ class Deck extends Component {
         }
     }
 
+    //render the card item
     renderCards() {
-        return this.props.data.map((item, index) => {
-            if (index === 0) {
+        return this.props.data.map((item, i) => {
+            //if swipe completed, the card didnt rendered
+            if (i < this.state.index) {
+                return null
+            }
+
+            //implement animation on each card item, specified with index item
+            if (i === this.state.index) {
                 return (
                     <Animated.View
                         key={item.id}
@@ -96,6 +108,7 @@ class Deck extends Component {
                 )
             }
 
+            //render the card item
             return this.props.renderCard(item)
         });
     }
