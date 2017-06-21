@@ -14,6 +14,14 @@ const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.25;
 const SWIPE_OUT_DURATION = 250;
 
 class Deck extends Component {
+    //to handle error message if the method doesn't exist
+    static defaultProps = {
+        onSwipeLeft: () => {
+        },
+        onSwipeRight: () => {
+        }
+    };
+
     constructor(props) {
         super(props);
         const position = new Animated.ValueXY();
@@ -35,14 +43,21 @@ class Deck extends Component {
             }
 
         });
-        this.state = {panResponder, position};
+        this.state = {panResponder, position, index: 0};
+    }
+
+    onSwipeComplete(direction) {
+        const {onSwipeLeft, onSwipeRight, data} = this.props;
+        const item = data[this.state.index];
+
+        direction === 'right' ? onSwipeRight(item) : onSwipeLeft(item);
     }
 
     //make card gone to the right or left
-    forceSwipe(direction){
+    forceSwipe(direction) {
         const x = direction === 'right' ? SCREEN_WIDTH : -SCREEN_WIDTH;
         Animated.timing(this.state.position, {
-            toValue: {x, y:0},
+            toValue: {x, y: 0},
             duration: SWIPE_OUT_DURATION
         }).start();
     }
