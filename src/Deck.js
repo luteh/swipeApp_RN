@@ -6,7 +6,9 @@ import {
     Animated,
     PanResponder,
     Dimensions,
-    Platform
+    Platform,
+    UIManager,
+    LayoutAnimation
 } from 'react-native'
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -48,6 +50,13 @@ class Deck extends Component {
         const position2 = new Animated.ValueXY();
         this.state = {panResponder, position, index: 0, position2};
     }
+
+    //region Used to animate the view when rerender, but have some issues to use this
+    /*componentWillUpdate(){
+        UIManager.setAnimationEnabledExperimental && UIManager.setAnimationEnabledExperimental(true);
+        LayoutAnimation.spring();
+    }*/
+    //endregion
 
     //handle if card has gone
     onSwipeComplete(direction) {
