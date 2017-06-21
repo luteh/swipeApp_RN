@@ -116,11 +116,12 @@ class Deck extends Component {
 
             //render the card item
             return (
-                <View
+                //add animated to this view to handle the flashing image
+                <Animated.View
                     key={item.id}
                     style={styles.cardStyle}>
                     {this.props.renderCard(item)}
-                </View>
+                </Animated.View>
             )
         }).reverse();
     }
@@ -140,7 +141,7 @@ const styles = {
         width: SCREEN_WIDTH,
         ...Platform.select({
             android: {
-                elevation: 1
+                elevation: 0.1
             }
         })
     }
