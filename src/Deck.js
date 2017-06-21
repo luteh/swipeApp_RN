@@ -26,9 +26,9 @@ class Deck extends Component {
             onPanResponderRelease: (event, gesture) => {
                 //add logic to handle if user swipe greater/smaller than X scale which has been specified
                 if (gesture.dx > SWIPE_THRESHOLD) {
-                    this.forceSwipeRight()
+                    this.forceSwipe('right')
                 } else if (gesture.dx < -SWIPE_THRESHOLD) {
-                    console.log('Swipe Left')
+                    this.forceSwipe('left')
                 } else {
                     this.resetPosition();
                 }
@@ -38,10 +38,11 @@ class Deck extends Component {
         this.state = {panResponder, position};
     }
 
-    //make card gone to the right
-    forceSwipeRight(){
+    //make card gone to the right or left
+    forceSwipe(direction){
+        const x = direction === 'right' ? SCREEN_WIDTH : -SCREEN_WIDTH;
         Animated.timing(this.state.position, {
-            toValue: {x:SCREEN_WIDTH, y:0},
+            toValue: {x, y:0},
             duration: SWIPE_OUT_DURATION
         }).start();
     }
