@@ -119,6 +119,7 @@ class Deck extends Component {
                 //add animated to this view to handle the flashing image
                 <Animated.View
                     key={item.id}
+                    // top: 10 * (i - this.state.index) < this style is for cascading card list
                     style={[styles.cardStyle, {top: 10 * (i - this.state.index)}]}>
                     {this.props.renderCard(item)}
                 </Animated.View>
