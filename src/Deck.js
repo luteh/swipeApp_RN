@@ -89,6 +89,11 @@ class Deck extends Component {
 
     //render the card item
     renderCards() {
+        //handle if list card item is empty
+        if (this.state.index >= this.props.data.length) {
+            return this.props.renderNoMoreCards();
+        }
+
         return this.props.data.map((item, i) => {
             //if swipe completed, the card didnt rendered
             if (i < this.state.index) {
