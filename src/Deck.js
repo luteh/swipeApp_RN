@@ -11,6 +11,7 @@ import {
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.25;
+const SWIPE_OUT_DURATION = 250;
 
 class Deck extends Component {
     constructor(props) {
@@ -25,7 +26,7 @@ class Deck extends Component {
             onPanResponderRelease: (event, gesture) => {
                 //add logic to handle if user swipe greater/smaller than X scale which has been specified
                 if (gesture.dx > SWIPE_THRESHOLD) {
-                    console.log('Swipe Right')
+                    this.forceSwipeRight()
                 } else if (gesture.dx < -SWIPE_THRESHOLD) {
                     console.log('Swipe Left')
                 } else {
@@ -35,6 +36,14 @@ class Deck extends Component {
 
         });
         this.state = {panResponder, position};
+    }
+
+    //make card gone to the right
+    forceSwipeRight(){
+        Animated.timing(this.state.position, {
+            toValue: {x:SCREEN_WIDTH, y:0},
+            duration: SWIPE_OUT_DURATION
+        }).start();
     }
 
     //Springing the card back to default
