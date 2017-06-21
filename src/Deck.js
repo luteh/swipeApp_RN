@@ -51,12 +51,19 @@ class Deck extends Component {
         this.state = {panResponder, position, index: 0, position2};
     }
 
-    //region Used to animate the view when rerender, but have some issues to use this
+    //region Used to animate the view when rerender, but have some issues to use this especially on android
     /*componentWillUpdate(){
-        UIManager.setAnimationEnabledExperimental && UIManager.setAnimationEnabledExperimental(true);
-        LayoutAnimation.spring();
-    }*/
+     UIManager.setAnimationEnabledExperimental && UIManager.setAnimationEnabledExperimental(true);
+     LayoutAnimation.spring();
+     }*/
     //endregion
+
+    //Resetting the index if any new data exist
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.data !== this.props.data) {
+            this.setState({index: 0})
+        }
+    }
 
     //handle if card has gone
     onSwipeComplete(direction) {
@@ -66,13 +73,13 @@ class Deck extends Component {
         direction === 'right' ? onSwipeRight(item) : onSwipeLeft(item);
 
         Animated.timing(this.state.position2, {
-            toValue: { x: 0, y: -10 },
+            toValue: {x: 0, y: -10},
             duration: 300
         }).start(() => {
             // we update state (rerender page) ONLY after the animation is finished
-            this.state.position.setValue({ x: 0, y: 0 });
-            this.state.position2.setValue({ x: 0, y: 0 });
-            this.setState({ index: this.state.index + 1 });
+            this.state.position.setValue({x: 0, y: 0});
+            this.state.position2.setValue({x: 0, y: 0});
+            this.setState({index: this.state.index + 1});
         });
     }
 
