@@ -3,7 +3,6 @@
  */
 import React, {Component} from 'react'
 import {
-    View,
     Animated,
     PanResponder,
     Dimensions,
@@ -44,7 +43,10 @@ class Deck extends Component {
             }
 
         });
-        this.state = {panResponder, position, index: 0};
+
+        // used to animate smooth transition of the rest of the deck
+        const position2 = new Animated.ValueXY();
+        this.state = {panResponder, position, index: 0, position2};
     }
 
     //handle if card has gone
@@ -54,8 +56,15 @@ class Deck extends Component {
 
         direction === 'right' ? onSwipeRight(item) : onSwipeLeft(item);
 
-        this.state.position.setValue({x: 0, y: 0});
-        this.setState({index: this.state.index + 1});
+        Animated.timing(this.state.position2, {
+            toValue: { x: 0, y: -10 },
+            duration: 300
+        }).start(() => {
+            // we update state (rerender page) ONLY after the animation is finished
+            this.state.position.setValue({ x: 0, y: 0 });
+            this.state.position2.setValue({ x: 0, y: 0 });
+            this.setState({ index: this.state.index + 1 });
+        });
     }
 
     //make card gone to the right or left
@@ -129,9 +138,9 @@ class Deck extends Component {
 
     render() {
         return (
-            <View>
+            <Animated.View style={this.state.position2.getLayout()}>
                 {this.renderCards()}
-            </View>
+            </Animated.View>
         )
     };
 }
